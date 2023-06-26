@@ -27,8 +27,7 @@ class JokeViewModel : ViewModel() {
     fun tellJoke() {
         viewModelScope.launch {
             val jokes = jokeApi.listJokes("general")
-            val fullJoke = jokes.map { Joke(it.setup, it.punchline) }
-            jokeLiveData.postValue(fullJoke)
+            jokeLiveData.postValue(jokes)
         }
     }
 }
