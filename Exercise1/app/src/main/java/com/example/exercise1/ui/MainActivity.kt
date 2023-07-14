@@ -8,15 +8,14 @@ import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.exercise1.databinding.ActivityMainBinding
 
-
-
-
 class MainActivity : ComponentActivity() {
 
     private lateinit var binding: ActivityMainBinding
     private lateinit var adapter: JokeAdapter
 
-    private val viewModel: JokeViewModel by viewModels()
+    private val viewModel: JokeViewModel by viewModels(){
+        JokeViewModelFactory()
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -28,16 +27,10 @@ class MainActivity : ComponentActivity() {
             adapter.addItems(it)
         }
 
-
         binding.jokesList.layoutManager = LinearLayoutManager(applicationContext)
         adapter = JokeAdapter()
         binding.jokesList.adapter = adapter
 
         viewModel.tellJoke()
-//        lifecycleScope.launch{
-//            val jokes = jokeApi.listJokes("general")
-//            binding.jokesList.layoutManager = LinearLayoutManager(applicationContext)
-//            binding.jokesList.adapter = JokeAdapter(jokes)
-//        }
     }
 }

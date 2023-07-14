@@ -1,33 +1,23 @@
 package com.example.exercise1.ui
 
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.exercise1.data.Joke
-import com.example.exercise1.data.JokeApi
+import com.example.exercise1.domain.models.Joke
+import com.example.exercise1.data.JokeRepository
+import com.example.exercise1.domain.usecase.ListJokesUseCase
 import kotlinx.coroutines.launch
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
 
-class JokeViewModel : ViewModel() {
+class JokeViewModel(private val listJokesUseCase: ListJokesUseCase) : ViewModel(){
 
-    private var jokeApi: JokeApi
-
-    val jokeLiveData = MutableLiveData<List<Joke>>()
-
-    init{
-        val retrofit = Retrofit.Builder()
-            .baseUrl("https://official-joke-api.appspot.com")
-            .addConverterFactory(GsonConverterFactory.create())
-            .build()
-
-        jokeApi = retrofit.create(JokeApi::class.java)
-    }
+    private val _jokeLiveData = MutableLiveData<List<Joke>>()
+    val jokeLiveData: LiveData<List<Joke>> = _jokeLiveData
 
     fun tellJoke() {
         viewModelScope.launch {
-            val jokes = jokeApi.listJokes("general")
-            jokeLiveData.postValue(jokes)
+            val jokes = listJokesUseCase("programming")
+            _jokeLiveData.postValue(jokes)
         }
     }
 }
